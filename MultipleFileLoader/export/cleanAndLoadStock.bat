@@ -1,2 +1,0 @@
-java -cp MultipleFileLoader.jar com.inherente.loader.model.MagnetoStringSpliter C:\Users\GUTIERREZLE\Development\workSpace\Kepler\MultipleFileLoader\export\zmb58.v.1(ANSI).txt Ce.:5 Nombre-1:31 Material:19 Texto-breve-de-material:41 Lote:12 Libre-utilización:18 En-control-calidad:23 Stock-no-libre:22 En-traslado:12 UMB:3
-java -cp MultipleFileLoader.jar com.inherente.loader.model.LoaderCommander EAI/EAI$TAO@LEGDB_TAOQAS
