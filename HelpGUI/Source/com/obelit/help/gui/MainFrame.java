@@ -11,12 +11,14 @@ import java.util.logging.Logger;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.DefaultCaret;
@@ -24,6 +26,7 @@ import javax.swing.text.DefaultCaret;
 import com.obelit.common.Control;
 import com.obelit.help.model.Controller;
 import com.obelit.help.model.Loader5Commander;
+import com.obelit.help.view.QueryView;
 import com.pool.SimpleConnection;
 
 public class MainFrame {
@@ -33,6 +36,7 @@ public class MainFrame {
 	public static final String SEARCH_TITLE= "Buscar Status HH";
 	public static final String LOGIN_AUTO= "AutoCheck";
 	public static final String FIND_TITLE= "Cambio Pass";
+	public static final String QUERY_GO= "Go";
 
 	public static final String RESET_TITLE= "Reset Pass";
 	public static final String UNLOCK_TITLE= "Unlock User";
@@ -46,38 +50,57 @@ public class MainFrame {
 
 	public static final int FIELD_LENGTH= 30;
 	public static final int TEXT_AREA_ROWS= 20;
-	public static final String [] TAB_TITLE= {"Password", "¿Colgado?"};
+	public static final String [] TAB_TITLE= {"Password", "¿Colgado?", "Query"};
+	public static final String [] CURRENT_DEFAULT_QRY= {"Internal Order"};
 	static final Dimension d= new Dimension(400,200);
+	static final Object rowData[][] = { 
+		{ "Row1-Column1", "Row1-Column2", "Row1-Column3"},
+        { "Row2-Column1", "Row2-Column2", "Row2-Column3"} 
+	};
+	static final Object columnName[] = { "Column One", "Column Two", "Column Three"};
 	JFrame frame;
 	JPanel panelHalted;
 	JPanel panelButton;
+	JPanel panelQuery;
+	JPanel panelSelection;
+	JPanel panelGrid;
+	JPanel panelActionCommand;
 	JPanel panelPassword;
 	JButton findPass;
 	JButton findHHU;
 	JButton changePass;
 	JButton unlock;
 	JButton lock;
+	JTable queryGrid;
 	ActionListener controller;
 	Control c;
+	JComboBox<String> combo;
+	JButton goQuery;
 	JTabbedPane tabbedPane;
+	JTextField documentId;
 	JTextField handHeldUserHalted;
 	JTextField handHeldUserPassword;
 	JTextArea textAreaPass;
 	JTextArea textAreaHH;
 	DefaultCaret caret;
 	DefaultCaret caretHH;
+	JScrollPane gridScrollpane;
 	JScrollPane textScrollpane;
 	JScrollPane textHHScrollpane;
+	private QueryView queryTab;
 	Logger log= Logger.getLogger(MainFrame.class.getName());
 	SimpleConnection pool;
 	Connection con;
+
 	public MainFrame() {
 		this(null);
 	}
+
 	public MainFrame(String wd) {
 		frame = new JFrame();
 		pool = new SimpleConnection(wd+"\\conection.properties", null);
 		con= pool.getConnection();
+		
 		controller= new Controller(this, wd);
 		init();
 		((Control)controller).checkPrivilege();
@@ -99,6 +122,8 @@ public class MainFrame {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowsHandler(this));
+		setQueryView(new QueryView(controller));
+
 		handHeldUserHalted =new JTextField(FIELD_LENGTH) ;
 		handHeldUserHalted.addActionListener(controller);
 		handHeldUserHalted.setName(HANGED_JTEXT_NAME);
@@ -125,7 +150,15 @@ public class MainFrame {
 		caret = (DefaultCaret)textAreaPass.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textScrollpane = new JScrollPane(textAreaPass);
-		
+
+		combo= new JComboBox<String>(CURRENT_DEFAULT_QRY);
+		goQuery= new JButton(QUERY_GO);
+		goQuery.addActionListener(controller);
+		documentId = new JTextField();
+		queryGrid = new JTable(
+				rowData, columnName
+		);
+
 		panelPassword= new JPanel();		
 		panelButton= new JPanel();
 		panelPassword.setLayout(new FlowLayout());
@@ -153,8 +186,28 @@ public class MainFrame {
 		panelHalted.add(findHHU);
 	 //	panelHalted.add(textHHScrollpane);
 
+		panelQuery= new JPanel();
+		panelQuery.setLayout(new FlowLayout());
+		panelSelection= new JPanel();
+		panelSelection.setLayout(new FlowLayout());
+		panelSelection.add(combo);
+		panelSelection.add(documentId);		
+		panelSelection.add(goQuery);
+
+		panelGrid= new JPanel();
+		panelGrid.setLayout(new FlowLayout());
+		panelGrid.add(queryGrid);
+		gridScrollpane = new JScrollPane(panelGrid);
+		panelActionCommand= new JPanel();
+		panelActionCommand.setLayout(new FlowLayout());
+
+		panelQuery.add(panelSelection);
+		panelQuery.add(gridScrollpane);
+		panelQuery.add(panelActionCommand);
+
 		tabbedPane.addTab(TAB_TITLE[0], panelPassword);
 		tabbedPane.addTab(TAB_TITLE[1], panelHalted);
+		tabbedPane.addTab(TAB_TITLE[2], getQueryView().getContentPane());
 		frame.setContentPane(tabbedPane);
 		frame.setVisible(true);
 		frame.setSize(d);
@@ -270,6 +323,14 @@ public class MainFrame {
 		
 	}
 	
+	public QueryView getQueryView() {
+		return queryTab;
+	}
+
+	public void setQueryView(QueryView queryTab) {
+		this.queryTab = queryTab;
+	}
+
 	class WindowsHandler implements WindowListener {
 		
 		MainFrame main;

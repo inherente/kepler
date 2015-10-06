@@ -61,7 +61,17 @@ public class Handler implements HandlerDriver {
 		return r;
 		
 	}
+	
+	public String recoverInternalOrder(String trn ,String uName, Control control) {
+		String r;
+		log.info("recoverInternalOrder()");
+		controller = control;
+		r= dao.recoverInternalOrder(uName);
+		controller.callback(trn, r);
 
+		return r;
+		
+	}
 	public String findSyncStatus(String trn ,String uName, Control control) {
 		String r;
 		log.info("findSyncStatus()");

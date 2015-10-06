@@ -93,6 +93,16 @@ public class Controller implements ActionListener, Control {
 			handler.login(this);
 			value= true;
 		}
+		if (name != null && name.equalsIgnoreCase(MainFrame.QUERY_GO)) {
+			log.info("incoming");
+			r =handler.recoverInternalOrder(MainFrame.TAB_TITLE[2], frame.getQueryView().getText(), this);
+			JOptionPane.showMessageDialog(
+					frame.getFrame(), r, frame.getHangedUName(null),
+				    JOptionPane.PLAIN_MESSAGE
+			);
+
+			value= true;
+		}
 		if (name != null && name.equalsIgnoreCase(MainFrame.SEARCH_TITLE)) {
 			r =handler.findSyncStatus(MainFrame.TAB_TITLE[1], frame.getHangedUName(frame.getHHUName(null)), this);
 			JOptionPane.showMessageDialog(

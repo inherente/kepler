@@ -2,14 +2,18 @@ package com.obelit.help.model;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.logging.Logger;
+
+import oracle.jdbc.OracleTypes;
 
 import com.pool.SimpleConnection;
 
 public class DataAccess {
 	public final static String RECOVER_USER_INFO= "{call HELP_DESK.RECOVERUSERINFO(?,?)}";
+	public final static String RECOVER_INTERNAL_ORDER= "{call HELP_DEV_DESK.getInternalOrder(?,?)}";
 	public final static String GET_SERVER_VERSSION= "{call HELP_DESK.getServerSession(?,?)}";
 
 	Connection con;
@@ -79,6 +83,35 @@ public class DataAccess {
 			e.printStackTrace();
 		}
 		return r;
+	}
+
+	public String recoverInternalOrder(String u) {
+		CallableStatement theStatement ;
+		ResultSet r = null;// String r= "";
+		String comment;
+		log.info("-" + u);
+
+		try {
+	        theStatement = con.prepareCall(RECOVER_INTERNAL_ORDER);// (GET_SERVER_VERSSION)
+
+	     // Passing an array to the procedure -
+	        theStatement.setString(1, u);
+	        theStatement.registerOutParameter(2, OracleTypes.CURSOR);
+	        theStatement.execute();
+	        r = (ResultSet)theStatement.getObject(2);
+	        log.info("before loop");
+	        
+	        while (r != null && r.next()) {
+	        	comment= r.getString(0);log.info("- " + comment + " incomming from in the array");
+	        	
+	        }
+	        theStatement.close();
+
+		} catch (SQLException e) {
+		 // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "r";
 	}
 
 	public String createUserPass(String u) {
