@@ -13,4 +13,5 @@ public interface Control {
 	public String callback(String t, String c);
 	public Component getFrame();
 	public boolean checkPrivilege();
+	public String[] getAllFunctionCatalog();
 }

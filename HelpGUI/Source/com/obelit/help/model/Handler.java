@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import com.obelit.common.Control;
 import com.obelit.common.HandlerDriver;
+import com.obelit.help.bean.Report;
 import com.obelit.help.gui.MainFrame;
 
 public class Handler implements HandlerDriver {
@@ -44,6 +45,9 @@ public class Handler implements HandlerDriver {
 		return login(System.getProperty("user.name"), control);
 		
 	}
+	public String[] getFunctionCatalog() {
+		return dao.recoverCatalog(null);
+	}
 
 	public boolean doSearch() {
 		log.info("doSearch()");
@@ -62,14 +66,26 @@ public class Handler implements HandlerDriver {
 		
 	}
 	
-	public String recoverInternalOrder(String trn ,String uName, Control control) {
-		String r;
+	public Report recoverInternalOrder(String trn ,String uName, Control control) {
+		String r= "";
+		Report bean ;//	Object[][] data;
 		log.info("recoverInternalOrder()");
 		controller = control;
-		r= dao.recoverInternalOrder(uName);
+		bean= dao.recoverInternalOrder(uName);
 		controller.callback(trn, r);
 
-		return r;
+		return bean ;
+		
+	}
+	public Report recoverReport(String trn ,String uName, String function, Control control) {
+		String r= "";
+		Report bean ;//	Object[][] data;
+		log.info("recoverReport()");
+		controller = control;
+		bean= dao.recoverReport(uName, function);
+		controller.callback(trn, r);
+
+		return bean ;
 		
 	}
 	public String findSyncStatus(String trn ,String uName, Control control) {

@@ -1,4 +1,5 @@
 package com.obelit.help.gui;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;// import java.awt.GridLayout;
@@ -30,7 +31,7 @@ import com.obelit.help.view.QueryView;
 import com.pool.SimpleConnection;
 
 public class MainFrame {
-	static final String TITLE= "Help Desk (beta)";
+	static final String TITLE= "Help Desk";
 	public static final String SYST_ADMIN_ROLE= "SystAdm";
 	public static final String HELP_DESK_ROLE= "HelpDesk";
 	public static final String SEARCH_TITLE= "Buscar Status HH";
@@ -52,7 +53,7 @@ public class MainFrame {
 	public static final int TEXT_AREA_ROWS= 20;
 	public static final String [] TAB_TITLE= {"Password", "¿Colgado?", "Query"};
 	public static final String [] CURRENT_DEFAULT_QRY= {"Internal Order"};
-	static final Dimension d= new Dimension(400,200);
+	static final Dimension d= new Dimension(600,200);
 	static final Object rowData[][] = { 
 		{ "Row1-Column1", "Row1-Column2", "Row1-Column3"},
         { "Row2-Column1", "Row2-Column2", "Row2-Column3"} 
@@ -66,6 +67,7 @@ public class MainFrame {
 	JPanel panelGrid;
 	JPanel panelActionCommand;
 	JPanel panelPassword;
+	JPanel content;
 	JButton findPass;
 	JButton findHHU;
 	JButton changePass;
@@ -88,6 +90,7 @@ public class MainFrame {
 	JScrollPane textScrollpane;
 	JScrollPane textHHScrollpane;
 	private QueryView queryTab;
+	BorderLayout gb = new BorderLayout() ;
 	Logger log= Logger.getLogger(MainFrame.class.getName());
 	SimpleConnection pool;
 	Connection con;
@@ -122,7 +125,7 @@ public class MainFrame {
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addWindowListener(new WindowsHandler(this));
-		setQueryView(new QueryView(controller));
+		setQueryView(new QueryView(controller, ((Controller)controller).getAllFunctionCatalog()));
 
 		handHeldUserHalted =new JTextField(FIELD_LENGTH) ;
 		handHeldUserHalted.addActionListener(controller);
@@ -159,17 +162,22 @@ public class MainFrame {
 				rowData, columnName
 		);
 
+		
+		content= new JPanel();
+		content.setLayout(gb);
+		
 		panelPassword= new JPanel();		
 		panelButton= new JPanel();
 		panelPassword.setLayout(new FlowLayout());
 		panelPassword.add((new JLabel(USER_LABEL)));
 		panelPassword.add(handHeldUserPassword);
+		panelButton.add(findPass);
 		panelButton.add(changePass);
 		panelButton.add(lock);
-		panelButton.add(unlock);
-		panelPassword.add(findPass);
+		panelButton.add(unlock);// panelPassword.add(findPass);
 	 //	panelPassword.add(textScrollpane);
-		panelPassword.add(panelButton);
+		content.add(panelPassword,  BorderLayout.PAGE_START);
+		content.add(panelButton, BorderLayout.PAGE_END);// panelPassword.add(panelButton);
 
 		findHHU= new JButton(SEARCH_TITLE);
 		findHHU.addActionListener(controller);
@@ -205,7 +213,7 @@ public class MainFrame {
 		panelQuery.add(gridScrollpane);
 		panelQuery.add(panelActionCommand);
 
-		tabbedPane.addTab(TAB_TITLE[0], panelPassword);
+		tabbedPane.addTab(TAB_TITLE[0], content);
 		tabbedPane.addTab(TAB_TITLE[1], panelHalted);
 		tabbedPane.addTab(TAB_TITLE[2], getQueryView().getContentPane());
 		frame.setContentPane(tabbedPane);

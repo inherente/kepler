@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import com.obelit.common.Control;
+import com.obelit.help.bean.Report;
 import com.obelit.help.gui.MainFrame;
 import com.obelit.util.StateBox;
 
@@ -29,8 +30,7 @@ public class Controller implements ActionListener, Control {
 		frame= fm;
 		handler= new Handler( new DataAccess(), wd);
 		box = new StateBox (); 
-		
-		
+				
 	}
 
 	public boolean checkPrivilege () {
@@ -39,6 +39,9 @@ public class Controller implements ActionListener, Control {
 	public boolean checkPrivilege (String u) {
 		dispatch(MainFrame.LOGIN_AUTO);
 		return false;
+	}
+	public String[] getAllFunctionCatalog() {
+		return handler.getFunctionCatalog();
 	}
 
 	@Override
@@ -68,9 +71,10 @@ public class Controller implements ActionListener, Control {
 
 	public boolean dispatch(String name, String option) {
 		boolean value= false;
+		Report bean;
 		Icon icon = null;
 		String feedback;
-		String r;
+		String r ="";//	Object[][] data;
 		log.info("dispatching");
 		if (option != null && LOCKED_STATUS.equalsIgnoreCase(option) ) {
 			name =MainFrame.NO_ACTION_TITLE;
@@ -95,11 +99,8 @@ public class Controller implements ActionListener, Control {
 		}
 		if (name != null && name.equalsIgnoreCase(MainFrame.QUERY_GO)) {
 			log.info("incoming");
-			r =handler.recoverInternalOrder(MainFrame.TAB_TITLE[2], frame.getQueryView().getText(), this);
-			JOptionPane.showMessageDialog(
-					frame.getFrame(), r, frame.getHangedUName(null),
-				    JOptionPane.PLAIN_MESSAGE
-			);
+			bean =handler.recoverReport(MainFrame.TAB_TITLE[2], frame.getQueryView().getText(), frame.getQueryView().getSelectedText(), this);
+			frame.getQueryView().setDataModel(bean.getData(), bean.getColumnName());// new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
 			value= true;
 		}
