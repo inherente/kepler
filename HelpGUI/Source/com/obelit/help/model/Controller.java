@@ -3,6 +3,7 @@ package com.obelit.help.model;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.logging.Logger;
 
 import javax.swing.Icon;
@@ -23,12 +24,14 @@ public class Controller implements ActionListener, Control {
 	Logger log= Logger.getLogger(Controller.class.getName());
 	MainFrame frame;
 	public Controller(MainFrame fm) {
-		this( fm, null);
+		this( fm, null, null);
 		
 	}
-	public Controller(MainFrame fm, String wd) {
+
+	public Controller(MainFrame fm, Connection con, String wd) {
 		frame= fm;
-		handler= new Handler( new DataAccess(), wd);
+		handler= new Handler( new DataAccess(con), wd, new JTableExcelExporter());
+
 		box = new StateBox (); 
 				
 	}
@@ -41,7 +44,7 @@ public class Controller implements ActionListener, Control {
 		return false;
 	}
 	public String[] getAllFunctionCatalog() {
-		return handler.getFunctionCatalog();
+		return handler.getFunctionCatalog(System.getProperty("user.name"));
 	}
 
 	@Override
@@ -98,9 +101,15 @@ public class Controller implements ActionListener, Control {
 			value= true;
 		}
 		if (name != null && name.equalsIgnoreCase(MainFrame.QUERY_GO)) {
-			log.info("incoming");
+		 //	log.info("incoming");
 			bean =handler.recoverReport(MainFrame.TAB_TITLE[2], frame.getQueryView().getText(), frame.getQueryView().getSelectedText(), this);
 			frame.getQueryView().setDataModel(bean.getData(), bean.getColumnName());// new String[]{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+
+			value= true;
+		}
+		if (name != null && name.equalsIgnoreCase(MainFrame.EXPORT_LABEL)) {
+			log.info("export");
+			handler.export(frame.getQueryView().getTable(), frame.getQueryView().getColumnModel());
 
 			value= true;
 		}

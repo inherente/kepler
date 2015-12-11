@@ -15,9 +15,10 @@ import com.pool.SimpleConnection;
 
 public class DataAccess {
 	public final static String RECOVER_USER_INFO= "{call HELP_DESK.RECOVERUSERINFO(?,?)}";
-	public final static String RECOVER_INTERNAL_ORDER= "{call HELP_DEV_DESK.getInternalOrder(?,?,?)}";
-	public final static String GET_ALL_FUNCTION= "{call HELP_DEV_DESK.getFunctionCatalog(?,?,?)}";
+	public final static String RECOVER_INTERNAL_ORDER= "{call HELP_DESK.getInternalOrder(?,?,?)}";
+	public final static String GET_ALL_FUNCTION= "{call HELP_DESK.getFunctionCatalog(?,?,?)}";
 	public final static String GET_SERVER_VERSSION= "{call HELP_DESK.getServerSession(?,?)}";
+	public final static String CRASH_MESSAGE = "Algo Salio Mal. Reinicia la app";
 
 	Connection con;
 
@@ -26,9 +27,11 @@ public class DataAccess {
 	public DataAccess (Connection conn) {
     	SimpleConnection me;
     	if (conn == null) {
-        	me = new SimpleConnection(".", DB_URL);
+    		log.info("created connection");
+        	me = new SimpleConnection(".", null);
         	con= me.getConnection();
     	} else {
+    		log.info("connection (ok) given");
     		con= conn;
     	}
 	}
@@ -83,6 +86,7 @@ public class DataAccess {
 
 		} catch (SQLException e) {
 		 // TODO Auto-generated catch block
+			r= CRASH_MESSAGE;
 			e.printStackTrace();
 		}
 		return r;
@@ -289,6 +293,7 @@ public class DataAccess {
 
 		} catch (SQLException e) {
 		 // TODO Auto-generated catch block
+			r= CRASH_MESSAGE;
 			e.printStackTrace();
 		}
 

@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
+import javax.swing.JTable;
+
 import com.obelit.common.Control;
 import com.obelit.common.HandlerDriver;
 import com.obelit.help.bean.Report;
@@ -15,6 +17,7 @@ public class Handler implements HandlerDriver {
 	Control controller;
 	Loader5Commander com; 
 	Hashtable<String, String> ht= null;
+	JTableExcelExporter exporter;
 	String wd;
 
 	public Handler (DataAccess d) {
@@ -25,6 +28,17 @@ public class Handler implements HandlerDriver {
 		dao= d;
 		com= new Loader5Commander(wdir, null , null);// System.getProperty("user.dir")
 		wd= wdir;
+	}
+	public Handler (DataAccess d, String wdir, JTableExcelExporter t) {
+		dao= d;
+		com= new Loader5Commander(wdir, null , null);// System.getProperty("user.dir")
+		wd= wdir;
+		exporter= t;
+	}
+
+	public boolean export(JTable t, String[] name) {
+		exporter.export(t, JTableExcelExporter.DEFAULT_FILENAME, name);
+		return false;
 	}
 
 	public boolean login(String uName, Control control) {
@@ -45,8 +59,12 @@ public class Handler implements HandlerDriver {
 		return login(System.getProperty("user.name"), control);
 		
 	}
+	public String[] getFunctionCatalog(String u) {
+		return dao.recoverCatalog(u);
+	}
 	public String[] getFunctionCatalog() {
-		return dao.recoverCatalog(null);
+		return getFunctionCatalog(System.getProperty("user.name"));
+
 	}
 
 	public boolean doSearch() {
@@ -92,6 +110,10 @@ public class Handler implements HandlerDriver {
 		String r;
 		log.info("findSyncStatus()");
 		controller = control;
+		if (uName != null && uName.length()> 0) {
+			uName= uName.trim();
+		} 
+
 		r= dao.recoverUserInfo(uName);
 		controller.callback(trn, r);
 
@@ -112,6 +134,10 @@ public class Handler implements HandlerDriver {
 	public String findHH(String trn ,String uName, Control control) {
 		String value= "";
 		controller = control;
+		if (uName != null && uName.length()> 0) {
+			uName= uName.trim();
+		} 
+
 		com.setCommand(MainFrame.FIND_STATUS_COMMAND);
 		com.monitor(com.load("@query.sql", uName), this);
 		return value;

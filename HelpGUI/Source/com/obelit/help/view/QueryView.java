@@ -17,10 +17,13 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
+import com.obelit.help.gui.MainFrame;
+
 
 public class QueryView {
 	public static final String [] CURRENT_DEFAULT_QRY= {"getInternalOrder"};
 	public static final String QUERY_GO= "Go";
+
 	public static final int INPUT_LENGTH= 15;
 	ActionListener main;
 	JPanel content= new JPanel();
@@ -32,11 +35,13 @@ public class QueryView {
 	DefaultTableModel tableModel;
 	JComboBox<String> combo;
 	JButton goQuery;
+	JButton export;
 	JTabbedPane tabbedPane;
 	JTextField documentId;
 	SimpleTableModel tm;
 	BorderLayout gb;
 	String[] catalog;
+	private String[] column;
 	Logger log= Logger.getLogger(QueryView.class.getName());
 
 	public QueryView(ActionListener control) {
@@ -80,13 +85,21 @@ public class QueryView {
 
 		gridScrollpane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		gridScrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		export= new JButton(MainFrame.EXPORT_LABEL);
+		export.addActionListener(main);
+
 		panelActionCommand= new JPanel();
 		panelActionCommand.setLayout(new FlowLayout());
+		panelActionCommand.add(export);
 
 		content.add(panelSelection,  BorderLayout.PAGE_START);
 		content.add(gridScrollpane, BorderLayout.CENTER);
 		content.add(panelActionCommand, BorderLayout.PAGE_END);
 
+	}
+	public JTable getTable() {
+		return queryGrid;
 	}
 
 	public Component getContentPane() {
@@ -105,6 +118,7 @@ public class QueryView {
 		int deletedCol =0;
 		int addCol =0;
 		int i;
+		setColumnModel(columnName);
 	 	tableModel= (DefaultTableModel) queryGrid.getModel();
 	 //	log.info(data.length + " & " + data[0].length);
 	 //	tableModel= new DefaultTableModel(0, 0);
@@ -167,6 +181,14 @@ public class QueryView {
 	 	tableModel.fireTableDataChanged();
 	 	queryGrid.getTableHeader().repaint();
 		return documentId.getText();
+	}
+
+	public String[] getColumnModel() {
+		return column;
+	}
+
+	public void setColumnModel(String[] column) {
+		this.column = column;
 	}
 
 	@SuppressWarnings("serial")

@@ -38,6 +38,7 @@ public class MainFrame {
 	public static final String LOGIN_AUTO= "AutoCheck";
 	public static final String FIND_TITLE= "Cambio Pass";
 	public static final String QUERY_GO= "Go";
+	public static final String EXPORT_LABEL= "Export";
 
 	public static final String RESET_TITLE= "Reset Pass";
 	public static final String UNLOCK_TITLE= "Unlock User";
@@ -104,7 +105,7 @@ public class MainFrame {
 		pool = new SimpleConnection(wd+"\\conection.properties", null);
 		con= pool.getConnection();
 		
-		controller= new Controller(this, wd);
+		controller= new Controller(this,con , wd);
 		init();
 		((Control)controller).checkPrivilege();
 
