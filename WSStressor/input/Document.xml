@@ -1,0 +1,22 @@
+<Customer>
+  <Header>
+    <MessageType>ZDEBMAS</MessageType>
+    <Sender>
+      <System>
+        <SystemName>T03CLNT170</SystemName>
+      </System>
+    </Sender>
+    <Reference>
+      <ReferenceID>0000000024842844</ReferenceID>
+      <ReferenceIDType>IDOCNUM</ReferenceIDType>
+    </Reference>
+  </Header>
+  <Message>
+    <GeneralData>
+      <CustomerNumber>0050426771</CustomerNumber>
+      <V3CustomerNumber></V3CustomerNumber>
+      <PaymentTerms></PaymentTerms>
+      <IntegrationID>0050426771</IntegrationID>
+    </GeneralData>
+  </Message>
+</Customer>

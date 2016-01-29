@@ -1,0 +1,1 @@
+java -cp axis-ssl-1.4.jar;WSStressor.jar; com.inherente.model.Stressor %1%
