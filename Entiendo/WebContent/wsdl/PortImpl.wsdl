@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://input.obelit.com" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://input.obelit.com" xmlns:intf="http://input.obelit.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://input.obelit.com" xmlns="http://www.w3.org/2001/XMLSchema">
+   <element name="receiveProduct">
+    <complexType>
+     <sequence>
+      <element name="message" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="receiveProductResponse">
+    <complexType/>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="receiveProductResponse">
+
+      <wsdl:part element="impl:receiveProductResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="receiveProductRequest">
+
+      <wsdl:part element="impl:receiveProduct" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="PortImpl">
+
+      <wsdl:operation name="receiveProduct">
+
+         <wsdl:input message="impl:receiveProductRequest" name="receiveProductRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:receiveProductResponse" name="receiveProductResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="PortImplSoapBinding" type="impl:PortImpl">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="receiveProduct">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="receiveProductRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="receiveProductResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="PortImplService">
+
+      <wsdl:port binding="impl:PortImplSoapBinding" name="PortImpl">
+
+         <wsdlsoap:address location="http://localhost:8080/Entiendo/services/PortImpl"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
